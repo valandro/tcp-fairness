@@ -32,7 +32,7 @@ public class Client {
         new Thread(clientConn(host, port)).start();
         Thread.sleep(5000);
         new Thread(clientConn(host, port)).start();
-        Thread.sleep(5000);
+        Thread.sleep(7500);
         new Thread(clientConn(host, port)).start();
     }
 }
