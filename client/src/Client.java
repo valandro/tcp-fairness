@@ -1,5 +1,7 @@
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class Client {
@@ -10,11 +12,11 @@ public class Client {
             final int bufferSize = 1024;
             try {
                 Socket socket = new Socket(host, port);
+                socket.setSendBufferSize(1024 * 1024 * 1024);
                 System.out.println("Client on port " + socket.getLocalPort() + " connected on server " + host + " on port " + port);
                 for (int i = 0; i < times; i++) {
-                    DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-                    dOut.writeInt(bufferSize);
-                    dOut.write(new byte[bufferSize]);
+                    OutputStream outputStream = new BufferedOutputStream(socket.getOutputStream());
+                    outputStream.write(new byte[bufferSize]);
                 }
                 System.out.println("Client " + socket.getLocalPort() + " closed connection!");
                 socket.close();

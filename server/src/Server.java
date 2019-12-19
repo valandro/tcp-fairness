@@ -26,7 +26,6 @@ public class Server {
 
                 Socket socket = tcpSocket.accept();
                 socket.setReceiveBufferSize(rcvBufferSize);
-
                 System.out.println("-------- SERVER LISTENING ON PORT -----");
                 System.out.println("                " + socket.getPort());
                 System.out.println("---------------------------------------");
