@@ -8,15 +8,16 @@ public class Client {
 
     private static Runnable clientConn(final String host, final int port) {
         return () -> {
-            final long times = 10000;
+            final long times = 200000;
             final int bufferSize = 1024;
             try {
                 Socket socket = new Socket(host, port);
                 socket.setSendBufferSize(1024 * 1024 * 1024);
                 System.out.println("Client on port " + socket.getLocalPort() + " connected on server " + host + " on port " + port);
                 for (int i = 0; i < times; i++) {
-                    OutputStream outputStream = new BufferedOutputStream(socket.getOutputStream());
-                    outputStream.write(new byte[bufferSize]);
+                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+		    out.writeInt(bufferSize);
+                    out.write(new byte[bufferSize]);
                 }
                 System.out.println("Client " + socket.getLocalPort() + " closed connection!");
                 socket.close();
@@ -32,9 +33,9 @@ public class Client {
         int port = Integer.valueOf(args[1]);
         System.out.println("Clients starting...!");
         new Thread(clientConn(host, port)).start();
-        Thread.sleep(5000);
+        Thread.sleep(4000);
         new Thread(clientConn(host, port)).start();
-        Thread.sleep(7500);
+        Thread.sleep(4000);
         new Thread(clientConn(host, port)).start();
     }
 }

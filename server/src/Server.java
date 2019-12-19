@@ -9,13 +9,14 @@ public class Server {
     public static void main(String[] args) {
         try {
             final int port = Integer.valueOf(args[0]);
-            final int rcvBufferSize = 10 * 1024; // 10KB
+            final int rcvBufferSize = 1024 * 1024 * 1024; // 10KB
             final int fixedNumberOfThreads = 3;
             final long globalTime = System.currentTimeMillis();
 
             ServerSocket tcpSocket = new ServerSocket(port);
-
-            System.out.println("-------- SERVER LISTENING ON PORT -------");
+            tcpSocket.setReceiveBufferSize(rcvBufferSize);
+            
+	    System.out.println("-------- SERVER LISTENING ON PORT -------");
             System.out.println("                " + port);
             System.out.println("-----------------------------------------");
 
@@ -54,7 +55,7 @@ class ReceiveDataThread extends Thread {
     }
 
     public void run() {
-        final int megaBits = 1024 * 1024;
+        final int megaBits = 1000 * 1000;
         int totalRecv = 0;
         long start = System.currentTimeMillis();
 
@@ -64,8 +65,10 @@ class ReceiveDataThread extends Thread {
         while(hasData) {
 
             try {
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
-                dataLength = dis.readInt();
+                DataInputStream dis = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		byte[] bb = new byte[8192];		
+		dis.readFully(bb);
+                dataLength = bb.length;
             } catch (Exception eof) {
                 hasData = false;
                 try {
@@ -79,7 +82,7 @@ class ReceiveDataThread extends Thread {
                 }
             }
             // Has data on recv buffer
-            if (dataLength >= 0) {
+            if (dataLength > 0) {
                 totalRecv += dataLength;
 
                 long stop = System.currentTimeMillis();
@@ -105,12 +108,6 @@ class ReceiveDataThread extends Thread {
                     // Reset total receive and time chronometer
                     totalRecv = 0;
                     start = System.currentTimeMillis();
-                }
-            } else {
-                try {
-                    socket.close();
-                } catch (IOException ex) {
-                    return;
                 }
             }
         }
