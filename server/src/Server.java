@@ -9,6 +9,7 @@ public class Server {
     public static void main(String[] args) {
         try {
             final int port = Integer.valueOf(args[0]);
+            final int rcvBufferSize = 10 * 1024; // 10KB
             final int fixedNumberOfThreads = 3;
             final long globalTime = System.currentTimeMillis();
 
@@ -24,6 +25,7 @@ public class Server {
             while (hasData) {
 
                 Socket socket = tcpSocket.accept();
+                socket.setReceiveBufferSize(rcvBufferSize);
 
                 System.out.println("-------- SERVER LISTENING ON PORT -----");
                 System.out.println("                " + socket.getPort());

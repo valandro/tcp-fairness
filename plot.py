@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-plt.style.use('fast')
-
 
 def get_coord(path):
     graph_data = open(path, 'r').read()
@@ -34,7 +32,6 @@ def animate(i):
     plt.title('TCP Fairness Experiment')
     plt.xlabel('Time (seconds)')
     plt.ylabel('Throughput (M bits/s)')
-    plt.style.use('seaborn-darkgrid')
 
 
 ani = animation.FuncAnimation(plt.gcf(), animate, interval=1000)  # update every 1sec (1000)
