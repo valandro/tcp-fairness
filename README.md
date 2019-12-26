@@ -28,7 +28,7 @@ make graph
 Run the server on `TCP_PORT`
 
 ```java
-java Server [TCP_PORT]
+java server.Server [TCP_PORT]
 ```
 
 Run the clients and connect to server
